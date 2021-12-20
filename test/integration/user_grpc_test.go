@@ -17,7 +17,6 @@ import (
 const grpcAddruser = "localhost:9194"
 
 func TestGRPCUserServiceCreateUser(t *testing.T) {
-
 	conn, err := grpc.Dial(grpcAddruser, grpc.WithInsecure())
 	if err != nil {
 		t.Errorf("connection to grpc server: %s", err)
@@ -25,13 +24,11 @@ func TestGRPCUserServiceCreateUser(t *testing.T) {
 	defer conn.Close()
 
 	client := user.NewGRPCClient(conn, opentracing.GlobalTracer(), log.NewNopLogger())
-	_, err = client.CreateUser(context.Background(), &user.CreateUserRequest{})
-
+	_, err = client.CreateUser(context.Background(), &user.CreateUserRequest{Nickname: "sample"})
 	assert.NoError(t, err)
 }
 
 func TestGRPCUserServiceGetUsers(t *testing.T) {
-
 	conn, err := grpc.Dial(grpcAddruser, grpc.WithInsecure())
 	if err != nil {
 		t.Errorf("connection to grpc server: %s", err)
@@ -40,12 +37,10 @@ func TestGRPCUserServiceGetUsers(t *testing.T) {
 
 	client := user.NewGRPCClient(conn, opentracing.GlobalTracer(), log.NewNopLogger())
 	_, err = client.GetUsers(context.Background(), &user.GetUsersRequest{})
-
 	assert.NoError(t, err)
 }
 
 func TestGRPCUserServiceUpdateUser(t *testing.T) {
-
 	conn, err := grpc.Dial(grpcAddruser, grpc.WithInsecure())
 	if err != nil {
 		t.Errorf("connection to grpc server: %s", err)
@@ -53,8 +48,9 @@ func TestGRPCUserServiceUpdateUser(t *testing.T) {
 	defer conn.Close()
 
 	client := user.NewGRPCClient(conn, opentracing.GlobalTracer(), log.NewNopLogger())
-	_, err = client.UpdateUser(context.Background(), &user.User{})
-
+	resp, err := client.CreateUser(context.Background(), &user.CreateUserRequest{Nickname: "sample"})
+	assert.NoError(t, err)
+	_, err = client.UpdateUser(context.Background(), &user.User{Id: resp.Id, Nickname: "test"})
 	assert.NoError(t, err)
 }
 
@@ -67,7 +63,8 @@ func TestGRPCUserServiceDeleteUser(t *testing.T) {
 	defer conn.Close()
 
 	client := user.NewGRPCClient(conn, opentracing.GlobalTracer(), log.NewNopLogger())
-	_, err = client.DeleteUser(context.Background(), &user.DeleteUserRequest{})
-
+	resp, err := client.CreateUser(context.Background(), &user.CreateUserRequest{Nickname: "sample"})
+	assert.NoError(t, err)
+	_, err = client.DeleteUser(context.Background(), &user.DeleteUserRequest{resp.Id})
 	assert.NoError(t, err)
 }

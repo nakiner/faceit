@@ -88,3 +88,32 @@ func TestDatabaseUserServiceDeleteUser(t *testing.T) {
 	err = repo.Delete(ctx, id)
 	require.NoError(t, err)
 }
+
+func TestDatabaseUserServiceGetUsers(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	cfg := configs.NewConfig()
+	err := cfg.Read()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	db, err := database.Connect(ctx, cfg)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+	require.NoError(t, err)
+
+	repo := user.NewRepository(db)
+	id, err := repo.Create(ctx, &user.User{Nickname: "sample"})
+	require.NoError(t, err)
+
+	conds := user.Conditions{}
+	conds["id"] = id
+
+	users, err := repo.Get(ctx, conds, 50, 1)
+	require.NoError(t, err)
+	require.NotEmpty(t, users)
+}

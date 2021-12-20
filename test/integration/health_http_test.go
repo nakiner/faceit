@@ -13,7 +13,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-const htttAddrhealth = "localhost:8081"
+const htttAddrhealth = "localhost:8080"
 
 func TestHTTPHealthServiceLiveness(t *testing.T) {
 	client, err := health.NewHTTPClient(htttAddrhealth, opentracing.GlobalTracer(), log.NewNopLogger())
