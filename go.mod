@@ -14,6 +14,7 @@ require (
 	github.com/gorilla/schema v1.2.0
 	github.com/grpc-ecosystem/grpc-gateway v1.16.0
 	github.com/mailru/easyjson v0.7.7
+	github.com/nats-io/nats-server v1.4.1
 	github.com/nats-io/nats.go v1.13.0
 	github.com/oklog/run v1.1.0
 	github.com/opentracing/opentracing-go v1.2.0
@@ -54,6 +55,7 @@ require (
 	github.com/magiconair/properties v1.8.5 // indirect
 	github.com/matttproud/golang_protobuf_extensions v1.0.1 // indirect
 	github.com/mitchellh/mapstructure v1.4.3 // indirect
+	github.com/nats-io/gnatsd v1.4.1 // indirect
 	github.com/nats-io/nkeys v0.3.0 // indirect
 	github.com/nats-io/nuid v1.0.1 // indirect
 	github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e // indirect
