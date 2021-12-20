@@ -1,0 +1,74 @@
+version: "3.5"
+services:
+  postgres:
+    image: postgres
+    volumes:
+      - data-volume:/var/lib/postgresql
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=faceit
+  nats:
+    image: nats
+    expose:
+      - "4222"
+    ports:
+      - "6222:6222"
+      - "4222:4222"
+    hostname: nats-server
+  migration:
+    image: migrate/migrate
+    depends_on:
+      - postgres
+    volumes:
+      - ./migrations:/migrations
+    command:
+      [ "-path", "/migrations", "-database",  "postgres://postgres:postgres@postgres:5432/faceit?sslmode=disable", "up" ]
+  app:
+    image: registry.devous.ru/faceit/app:latest
+    depends_on:
+      - postgres
+      - nats
+    environment:
+      FACEIT_CONFIG:
+      FACEIT_SERVER_HTTP_PORT: 8080
+      FACEIT_SERVER_HTTP_TIMEOUT_SEC: 86400
+      FACEIT_SERVER_GRPC_PORT: 9194
+      FACEIT_SERVER_GRPC_TIMEOUT_SEC: 86400
+      FACEIT_POSTGRES_MASTER_HOST: postgres
+      FACEIT_POSTGRES_MASTER_PORT: 5432
+      FACEIT_POSTGRES_MASTER_USER: postgres
+      FACEIT_POSTGRES_MASTER_PASSWORD: postgres
+      FACEIT_POSTGRES_MASTER_DATABASE_NAME: faceit
+      FACEIT_POSTGRES_MASTER_SECURE: disable
+      FACEIT_POSTGRES_REPLICA_HOST: postgres
+      FACEIT_POSTGRES_REPLICA_PORT: 5432
+      FACEIT_POSTGRES_REPLICA_USER: postgres
+      FACEIT_POSTGRES_REPLICA_PASSWORD: postgres
+      FACEIT_POSTGRES_REPLICA_DATABASE_NAME: faceit
+      FACEIT_POSTGRES_REPLICA_SECURE: disable
+      FACEIT_NATS_HOST: nats-server
+      FACEIT_NATS_PORT: 4222
+      FACEIT_NATS_REQUEST_TIMEOUT_MSEC: 500000
+      FACEIT_NATS_RETRY_LIMIT: 5
+      FACEIT_NATS_RECONNECT_TIME_WAIT_MSEC: 500
+      FACEIT_LOGGER_LEVEL: emerg
+      FACEIT_LOGGER_TIME_FORMAT: 2006-01-02T15:04:05.999999999
+      FACEIT_SENTRY_ENABLED: false
+      FACEIT_SENTRY_DSN: https://hash@sentry.com
+      FACEIT_SENTRY_ENVIRONMENT: local
+      FACEIT_TRACER_ENABLED: false
+      FACEIT_TRACER_HOST: 127.0.0.1
+      FACEIT_TRACER_PORT: 5775
+      FACEIT_TRACER_NAME: export
+      FACEIT_METRICS_ENABLED: false
+      FACEIT_METRICS_PORT: 9153
+      FACEIT_LIMITER_ENABLED: false
+      FACEIT_LIMITER_LIMIT: 10000
+    ports:
+      - 8080:8080
+      - 8081:8081
+volumes:
+  data-volume:

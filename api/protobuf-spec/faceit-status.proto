@@ -1,0 +1,8 @@
+syntax = "proto3";
+package faceitpb;
+option go_package = "internal/faceitpb";
+
+message Status {
+  bool status = 1;
+  string message = 2;
+}

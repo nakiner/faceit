@@ -1,0 +1,342 @@
+openapi: 3.0.0
+info:
+  title: faceit
+  version: '0.1.0'
+servers:
+  - url: http://faceit-d.devous.ru/
+    description: Optional server description, e.g. Main (Dev) server
+  - url: https://faceit-v1.devous.ru/
+    description: Optional server description, e.g. Main (Prod) server
+
+paths:
+  '/liveness':
+    get:
+      tags:
+        - HealthCheck
+      summary: returns a error if service doesn`t live.
+      operationId: HealthService.Liveness
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LivenessResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  '/readiness':
+    get:
+      tags:
+        - HealthCheck
+      summary: returns a error if service doesn`t ready.
+      operationId: HealthService.Readiness
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReadinessResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  '/version':
+    get:
+      tags:
+        - HealthCheck
+      summary: returns build time, last commit and version app
+      operationId: HealthService.Version
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VersionResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  '/user':
+    post:
+      tags:
+        - user
+      summary: Create a new user
+      operationId: UserService.CreateUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserRequest'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateUserResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    get:
+      tags:
+        - user
+      summary: Get existing users, possibly allowing filter by arguments
+      operationId: UserService.GetUsers
+      parameters:
+        - in: path
+          name: limit
+          required: false
+          schema:
+            type: integer
+        - in: path
+          name: offset
+          required: false
+          schema:
+            type: integer
+        - in: path
+          name: id
+          required: false
+          schema:
+            type: string
+        - in: path
+          name: country
+          required: false
+          schema:
+            type: string
+        - in: path
+          name: firstName
+          required: false
+          schema:
+            type: string
+        - in: path
+          name: lastName
+          required: false
+          schema:
+            type: string
+        - in: path
+          name: nickname
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetUsersResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  '/user/{id}':
+    put:
+      tags:
+        - user
+      summary: Update existing user
+      operationId: UserService.UpdateUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      parameters:
+        - in: path
+          name: id
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - user
+      summary: Delete existing user
+      operationId: UserService.DeleteUser
+      parameters:
+        - in: path
+          name: id
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+    CreateUserRequest:
+      type: object
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        nickname:
+          type: string
+        password:
+          type: string
+        passwordConfirm:
+          type: string
+        email:
+          type: string
+        country:
+          type: string
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+    CreateUserResponse:
+      type: object
+    DeleteUserRequest:
+      type: object
+    GetUsersRequest:
+      type: object
+      properties:
+        limit:
+          type: integer
+        offset:
+          type: integer
+        id:
+          type: string
+        country:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        nickname:
+          type: string
+    GetUsersResponse:
+      type: array
+      items:
+        $ref: '#/components/schemas/User'
+    LivenessRequest:
+      type: object
+    LivenessResponse:
+      type: object
+    ReadinessRequest:
+      type: object
+    ReadinessResponse:
+      type: object
+    Status:
+      type: object
+      properties:
+        status:
+          type: boolean
+        message:
+          type: string
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        nickname:
+          type: string
+        password:
+          type: string
+        email:
+          type: string
+        country:
+          type: string
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+    VersionRequest:
+      type: object
+    VersionResponse:
+      type: object
+      properties:
+        buildTime:
+          type: string
+        version:
+          type: string
+        commit:
+          type: string

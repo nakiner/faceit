@@ -1,0 +1,105 @@
+syntax = "proto3";
+package faceitpb;
+option go_package = "internal/faceitpb";
+
+import "google/api/annotations.proto";
+import "protoc-gen-swagger/options/annotations.proto";
+
+import "faceit-health.proto";
+import "faceit-user.proto";
+import "faceit-status.proto";
+
+option (grpc.gateway.protoc_gen_swagger.options.openapiv2_swagger) = {
+  info: {
+    title: "faceit example service";
+    version: "1.0";
+  };
+  schemes: HTTP;
+  consumes: "application/json";
+  produces: "application/json";
+  responses: {
+    key: "404";
+    value: {
+      description: "Returned when the resource does not exist.";
+      schema: {
+        json_schema: {
+          type: STRING;
+        }
+      }
+    }
+  }
+};
+
+service HealthService {
+  // returns a error if service doesn`t live.
+  rpc Liveness (LivenessRequest) returns (LivenessResponse) {
+    option (google.api.http) = {
+      get: "/liveness"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      tags: "HealthCheck"
+    };
+  }
+
+  // returns a error if service doesn`t ready.
+  rpc Readiness (ReadinessRequest) returns (ReadinessResponse) {
+    option (google.api.http) = {
+      get: "/readiness"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      tags: "HealthCheck"
+    };
+  }
+
+  // returns build time, last commit and version app
+  rpc Version (VersionRequest) returns (VersionResponse) {
+    option (google.api.http) = {
+      get: "/version"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      tags: "HealthCheck"
+    };
+  }
+}
+
+service UserService {
+  // Create a new user
+  rpc CreateUser (CreateUserRequest) returns (CreateUserResponse) {
+    option (google.api.http) = {
+      post: "/user"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      tags: "user"
+    };
+  }
+
+  // Update existing user
+  rpc UpdateUser (User) returns (Status) {
+    option (google.api.http) = {
+      put: "/user/{id}"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      tags: "user"
+    };
+  }
+
+  // Delete existing user
+  rpc DeleteUser (DeleteUserRequest) returns (Status) {
+    option (google.api.http) = {
+      delete: "/user/{id}"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      tags: "user"
+    };
+  }
+
+  // Get existing users, possibly allowing filter by arguments
+  rpc GetUsers (GetUsersRequest) returns (GetUsersResponse) {
+    option (google.api.http) = {
+      get: "/user"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      tags: "user"
+    };
+  }
+}

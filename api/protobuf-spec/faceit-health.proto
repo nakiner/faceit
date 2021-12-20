@@ -1,0 +1,23 @@
+syntax = "proto3";
+package faceitpb;
+option go_package = "internal/faceitpb";
+
+message LivenessRequest {}
+
+message LivenessResponse {
+  string status = 1;
+}
+
+message ReadinessRequest {}
+
+message ReadinessResponse {
+  string status = 1;
+}
+
+message VersionRequest {}
+
+message VersionResponse {
+  string BuildTime = 1;
+  string Version = 2;
+  string Commit = 3;
+}
