@@ -5,7 +5,7 @@
 $ cd workspace
 
 # Clone into YOUR $GOPATH/src
-$ git clone git clone https://github.com/nakiner/faceit.git
+$ git clone https://github.com/nakiner/faceit.git
 
 #move to project
 $ cd faceit
