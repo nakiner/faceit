@@ -26,6 +26,10 @@ $ curl localhost:8080/liveness
 $ make test
 ```
 
+# Subscribing
+
+Please see https://github.com/nakiner/faceit-subscriber readme to set up subscriber.
+
 # Explanation
 
 Based on my development experience with Go I have decided to use go-kit as main toolkit for maintaining all access 

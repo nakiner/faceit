@@ -70,5 +70,16 @@ services:
     ports:
       - 8080:8080
       - 8081:8081
+  subscriber:
+    image: registry.devous.ru/faceit/app-subscriber:latest
+    environment:
+      FACEIT_SUBSCRIBER_CONFIG:
+      FACEIT_SUBSCRIBER_NATS_HOST: nats-server
+      FACEIT_SUBSCRIBER_NATS_PORT: 4222
+      FACEIT_SUBSCRIBER_NATS_REQUEST_TIMEOUT_MSEC: 500000
+      FACEIT_SUBSCRIBER_NATS_RETRY_LIMIT: 5
+      FACEIT_SUBSCRIBER_NATS_RECONNECT_TIME_WAIT_MSEC: 500
+      FACEIT_SUBSCRIBER_LOGGER_LEVEL: info
+      FACEIT_SUBSCRIBER_LOGGER_TIME_FORMAT: 2006-01-02T15:04:05.999999999
 volumes:
   data-volume:
