@@ -3,15 +3,13 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/nakiner/faceit/internal/database"
+	"github.com/nakiner/faceit/internal/store/database"
+	"github.com/nakiner/faceit/pkg/health"
 	userQueue "github.com/nakiner/faceit/pkg/queue/user"
-	"github.com/nats-io/nats.go"
+	natsCl "github.com/nakiner/faceit/pkg/store/nats"
+	"github.com/nakiner/faceit/pkg/user"
 	"net/http"
 	"os"
-	"time"
-
-	"github.com/nakiner/faceit/pkg/health"
-	"github.com/nakiner/faceit/pkg/user"
 
 	"github.com/go-kit/kit/log/level"
 	"github.com/nakiner/faceit/configs"
@@ -77,20 +75,14 @@ func main() {
 
 	defer db.Close()
 
-	nc, err := nats.Connect(
-		fmt.Sprintf("nats://%s:%d", cfg.Nats.Host, cfg.Nats.Port),
-		nats.RetryOnFailedConnect(true),
-		nats.MaxReconnects(cfg.Nats.RetryLimit),
-		nats.ReconnectWait(time.Millisecond*time.Duration(cfg.Nats.WaitLimit)),
-		nats.UserInfo(cfg.Nats.UserName, cfg.Nats.Password),
-	)
+	nc, err := natsCl.NewClient(&cfg.Nats)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "failed to init nats: %s", err)
 		os.Exit(1)
 	}
 	defer nc.Close()
 
-	ec, err := nats.NewEncodedConn(nc, nats.JSON_ENCODER)
+	ec, err := natsCl.NewEncodedClient(nc)
 	if err != nil {
 		level.Error(logger).Log("msg", "err init nats NewEncodedConn", "err", err)
 		os.Exit(1)

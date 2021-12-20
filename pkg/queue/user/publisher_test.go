@@ -1,9 +1,8 @@
 package user
 
 import (
-	"fmt"
+	natsCl "github.com/nakiner/faceit/pkg/store/nats"
 	natsserver "github.com/nats-io/nats-server/test"
-	"github.com/nats-io/nats.go"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
@@ -17,13 +16,14 @@ func TestNewPublisher(t *testing.T) {
 	natsSvr.Start()
 	defer natsSvr.Shutdown()
 
-	nc, err := nats.Connect(
-		fmt.Sprintf("nats://%s:%d", opt.Host, opt.Port),
-	)
+	nc, err := natsCl.NewClient(&natsCl.Config{
+		Host: opt.Host,
+		Port: opt.Port,
+	})
 	assert.NoError(t, err)
 	defer nc.Close()
 
-	ec, err := nats.NewEncodedConn(nc, nats.JSON_ENCODER)
+	ec, err := natsCl.NewEncodedClient(nc)
 	assert.NoError(t, err)
 	defer ec.Close()
 
@@ -39,13 +39,14 @@ func TestPublisher_IsReady(t *testing.T) {
 	natsSvr.Start()
 	defer natsSvr.Shutdown()
 
-	nc, err := nats.Connect(
-		fmt.Sprintf("nats://%s:%d", opt.Host, opt.Port),
-	)
+	nc, err := natsCl.NewClient(&natsCl.Config{
+		Host: opt.Host,
+		Port: opt.Port,
+	})
 	assert.NoError(t, err)
 	defer nc.Close()
 
-	ec, err := nats.NewEncodedConn(nc, nats.JSON_ENCODER)
+	ec, err := natsCl.NewEncodedClient(nc)
 	assert.NoError(t, err)
 	defer ec.Close()
 
@@ -61,13 +62,14 @@ func TestPublisher_UpdateUser(t *testing.T) {
 	natsSvr.Start()
 	defer natsSvr.Shutdown()
 
-	nc, err := nats.Connect(
-		fmt.Sprintf("nats://%s:%d", opt.Host, opt.Port),
-	)
+	nc, err := natsCl.NewClient(&natsCl.Config{
+		Host: opt.Host,
+		Port: opt.Port,
+	})
 	assert.NoError(t, err)
 	defer nc.Close()
 
-	ec, err := nats.NewEncodedConn(nc, nats.JSON_ENCODER)
+	ec, err := natsCl.NewEncodedClient(nc)
 	assert.NoError(t, err)
 	defer ec.Close()
 

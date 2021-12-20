@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	"github.com/nakiner/faceit/pkg/store/nats"
 	"github.com/pkg/errors"
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
@@ -102,15 +103,7 @@ type Config struct {
 		Master  Database
 		Replica Database
 	}
-	Nats struct {
-		Host           string
-		Port           int
-		UserName       string
-		Password       string
-		RequestTimeOut int `mapstructure:"request_timeout_msec"`
-		RetryLimit     int `mapstructure:"retry_limit"`
-		WaitLimit      int `mapstructure:"reconnect_time_wait_msec"`
-	}
+	Nats nats.Config
 }
 
 type Database struct {

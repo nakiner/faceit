@@ -5,8 +5,8 @@ package integration
 
 import (
 	"context"
-	"github.com/nakiner/faceit/internal/database"
 	"github.com/nakiner/faceit/internal/repository/user"
+	"github.com/nakiner/faceit/internal/store/database"
 	"log"
 	"testing"
 

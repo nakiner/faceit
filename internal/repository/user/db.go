@@ -3,7 +3,7 @@ package user
 import (
 	"context"
 	"github.com/google/uuid"
-	"github.com/nakiner/faceit/internal/database"
+	"github.com/nakiner/faceit/internal/store/database"
 	"github.com/pkg/errors"
 	"gorm.io/gorm"
 	"time"
@@ -90,7 +90,7 @@ func (r *userDBRepository) Update(ctx context.Context, data *User) error {
 
 // Get performs select from database with set of conditions to fetch User collection
 // Conditions parsed into database prepared conditions to take only required data
-// Empty rowset does not handled to evade 404 behavior on transport layer. 
+// Empty rowset does not handled to evade 404 behavior on transport layer.
 func (r *userDBRepository) Get(ctx context.Context, conditions Conditions, limit uint32, offset uint32) ([]*User, error) {
 	conn := r.db.GetReplicaConn(ctx)
 

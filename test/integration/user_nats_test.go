@@ -11,6 +11,7 @@ import (
 	"testing"
 	"time"
 
+	natsCl "github.com/nakiner/faceit/pkg/store/nats"
 	"github.com/nats-io/nats.go"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -53,10 +54,10 @@ func TestNatsSubscriberUserServiceUpdateUser(t *testing.T) {
 		log.Fatal(err)
 	}
 
-	nc, err := nats.Connect(
-		fmt.Sprintf("nats://%s:%d", cfg.Nats.Host, cfg.Nats.Port),
-		nats.ReconnectWait(time.Millisecond*time.Duration(cfg.Nats.WaitLimit)),
-	)
+	nc, err := natsCl.NewClient(&cfg.Nats)
+	assert.NoError(t, err)
+	defer nc.Close()
+
 	if err != nil {
 		log.Fatal(err)
 	}

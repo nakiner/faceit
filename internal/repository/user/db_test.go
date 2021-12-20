@@ -3,7 +3,7 @@ package user
 import (
 	"context"
 	"github.com/DATA-DOG/go-sqlmock"
-	"github.com/nakiner/faceit/internal/database"
+	"github.com/nakiner/faceit/internal/store/database"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"gorm.io/driver/postgres"
