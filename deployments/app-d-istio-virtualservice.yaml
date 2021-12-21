@@ -1,0 +1,19 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: app-d-faceit-istio-vs
+  namespace: faceit
+spec:
+  hosts:
+    - "app-d.faceit.hoolie.io"
+  gateways:
+    - app-d-faceit-istio-gw
+  http:
+    - match:
+      - uri:
+          prefix: /
+      route:
+        - destination:
+            host: app-d
+            port:
+              number: 8080

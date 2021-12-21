@@ -33,7 +33,7 @@ test:
 	go test -v -race ./...
 
 docker:
-	docker build -t registry.devous.ru/faceit/app:latest .
+	docker build -t registry.hoolie.io/faceit/app:latest .
 
 docker-run:
 	docker-compose up -d

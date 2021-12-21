@@ -3,9 +3,9 @@ info:
   title: faceit
   version: '0.1.0'
 servers:
-  - url: http://faceit-d.devous.ru/
+  - url: https://app-d.faceit.hoolie.io/
     description: Optional server description, e.g. Main (Dev) server
-  - url: https://faceit-v1.devous.ru/
+  - url: https://app-v1.faceit.hoolie.io/
     description: Optional server description, e.g. Main (Prod) server
 
 paths:

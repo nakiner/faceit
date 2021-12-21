@@ -1,0 +1,101 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: app-d
+  name: app-d
+  namespace: faceit
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: app-d
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        version: dev
+        app: app-d
+    spec:
+      containers:
+        - env:
+            - name: "FACEIT_SERVER_HTTP_PORT"
+              value: "8080"
+            - name: "FACEIT_SERVER_HTTP_TIMEOUT_SEC"
+              value: "86400"
+            - name: "FACEIT_SERVER_GRPC_PORT"
+              value: "9194"
+            - name: "FACEIT_SERVER_GRPC_TIMEOUT_SEC"
+              value: "86400"
+            - name: "FACEIT_POSTGRES_MASTER_HOST"
+              value: "postgresql-master.db.svc.cluster.local"
+            - name: "FACEIT_POSTGRES_MASTER_PORT"
+              value: "5432"
+            - name: "FACEIT_POSTGRES_MASTER_USER"
+              value: "app-d-faceit"
+            - name: "FACEIT_POSTGRES_MASTER_PASSWORD"
+              value: "secret"
+            - name: "FACEIT_POSTGRES_MASTER_DATABASE_NAME"
+              value: "app-d-faceit"
+            - name: "FACEIT_POSTGRES_MASTER_SECURE"
+              value: "disable"
+            - name: "FACEIT_POSTGRES_REPLICA_HOST"
+              value: "postgresql-slave.db.svc.cluster.local"
+            - name: "FACEIT_POSTGRES_REPLICA_PORT"
+              value: "5432"
+            - name: "FACEIT_POSTGRES_REPLICA_USER"
+              value: "app-d-faceit"
+            - name: "FACEIT_POSTGRES_REPLICA_PASSWORD"
+              value: "secret"
+            - name: "FACEIT_POSTGRES_REPLICA_DATABASE_NAME"
+              value: "app-d-faceit"
+            - name: "FACEIT_POSTGRES_REPLICA_SECURE"
+              value: "disable"
+            - name: "FACEIT_NATS_HOST"
+              value: "nats.faceit.svc.cluster.local"
+            - name: "FACEIT_NATS_PORT"
+              value: "4222"
+            - name: "FACEIT_NATS_REQUEST_TIMEOUT_MSEC"
+              value: "500000"
+            - name: "FACEIT_NATS_RETRY_LIMIT"
+              value: "5"
+            - name: "FACEIT_NATS_RECONNECT_TIME_WAIT_MSEC"
+              value: "500"
+            - name: "FACEIT_LOGGER_LEVEL"
+              value: "emerg"
+            - name: "FACEIT_LOGGER_TIME_FORMAT"
+              value: "2006-01-02T15:04:05.999999999"
+            - name: "FACEIT_SENTRY_ENABLED"
+              value: "false"
+            - name: "FACEIT_SENTRY_DSN"
+              value: "https://hash@sentry.com"
+            - name: "FACEIT_SENTRY_ENVIRONMENT"
+              value: "local"
+            - name: "FACEIT_TRACER_ENABLED"
+              value: "false"
+            - name: "FACEIT_TRACER_HOST"
+              value: "127.0.0.1"
+            - name: "FACEIT_TRACER_PORT"
+              value: "5775"
+            - name: "FACEIT_TRACER_NAME"
+              value: "export"
+            - name: "FACEIT_METRICS_ENABLED"
+              value: "false"
+            - name: "FACEIT_METRICS_PORT"
+              value: "9153"
+            - name: "FACEIT_LIMITER_ENABLED"
+              value: "false"
+            - name: "FACEIT_LIMITER_LIMIT"
+              value: "10000"
+          image: registry.hoolie.io/faceit/app:latest
+          imagePullPolicy: Always
+          name: app-d
+          ports:
+            - name: http-app
+              containerPort: 8080
+              protocol: TCP
+            - name: grpc-app
+              containerPort: 9090
+              protocol: TCP
+          resources: {}
+      restartPolicy: Always

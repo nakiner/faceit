@@ -27,7 +27,7 @@ services:
     command:
       [ "-path", "/migrations", "-database",  "postgres://postgres:postgres@postgres:5432/faceit?sslmode=disable", "up" ]
   app:
-    image: registry.devous.ru/faceit/app:latest
+    image: registry.hoolie.io/faceit/app:latest
     depends_on:
       - postgres
       - nats
@@ -71,7 +71,7 @@ services:
       - 8080:8080
       - 8081:8081
   subscriber:
-    image: registry.devous.ru/faceit/app-subscriber:latest
+    image: registry.hoolie.io/faceit/app-subscriber:latest
     environment:
       FACEIT_SUBSCRIBER_CONFIG:
       FACEIT_SUBSCRIBER_NATS_HOST: nats-server

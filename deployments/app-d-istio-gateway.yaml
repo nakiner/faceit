@@ -1,0 +1,24 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: app-d-faceit-istio-gw
+  namespace: faceit
+spec:
+  selector:
+    istio: ingressgateway # use Istio default gateway implementation
+  servers:
+    - port:
+        number: 80
+        name: http
+        protocol: HTTP
+      hosts:
+        - "app-d.faceit.hoolie.io"
+    - port:
+        number: 443
+        name: https
+        protocol: HTTPS
+      tls:
+        mode: SIMPLE
+        credentialName: app-d-faceit-ingress-tls # must be the same as secret
+      hosts:
+        - "app-d.faceit.hoolie.io"
